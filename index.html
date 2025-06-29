@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danielly Barros Beauty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFF5F7;
+        }
+        .title {
+            font-family: 'Playfair Display', serif;
+        }
+        .butterfly {
+            animation: flutter 8s infinite ease-in-out;
+        }
+        @keyframes flutter {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            50% { transform: translateY(-5px) rotate(-5deg); }
+            75% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .tab-active {
+            background-color: #FFF;
+            color: #FF6B9C;
+            border-bottom: 3px solid #FF6B9C;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(255, 107, 156, 0.3);
+        }
+        .cart-item-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #FF6B9C;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(255, 107, 156, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .logo-placeholder::before {
+            content: "DB";
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: bold;
+            color: #FF6B9C;
+        }
+        .logo-placeholder::after {
+            content: "";
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: #FF6B9C;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .low-stock {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+        .out-of-stock {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            border: 2px solid transparent;
+            position: relative;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0px 0px 2px rgba(0,0,0,0.7);
+        }
+        .color-option.selected {
+            border-color: #FF6B9C;
+            transform: scale(1.2);
+        }
+        .color-option-label {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: bold;
+            white-space: nowrap;
+            background-color: rgba(255,255,255,0.8);
+            padding: 1px 3px;
+            border-radius: 3px;
+            color: #333;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+        .quantity-input {
+            width: 30px;
+            text-align: center;
+            border: none;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        .social-icon {
+            transition: transform 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: scale(1.2);
+        }
+        .color-swatch-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .color-swatch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        .color-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            margin-bottom: 2px;
+        }
+        .color-name {
+            font-size: 10px;
+            font-weight: 600;
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 1px 5px;
+            border-radius: 10px;
+        }
+        .color-swatch.selected .color-circle {
+            border-color: #FF6B9C;
+            transform: scale(1.1);
+        }
+        .color-swatch.selected .color-name {
+            background-color: #FF6B9C;
+            color: white;
+        }
+        .shipping-notice {
+            background-color: #E8F4FD;
+            border-left: 4px solid #3498db;
+            padding: 10px 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #2980b9;
+            display: flex;
+            align-items: center;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .contact-icon {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="relative mb-8">
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <!-- Butterflies -->
+                <svg class="butterfly absolute top-10 left-10 w-8 h-8 text-white opacity-70" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.6,2.5c1.2,1.8,1.9,3.9,1.9,6.1c0,4.7-2.9,8.7-7,10.3c-0.6,0.2-1.2-0.1-1.4-0.7c-0.2-0.6,0.1-1.2,0.7-1.4 c3.3-1.3,5.7-4.6,5.7-8.3c0-1.8-0.5-3.5-1.5-4.9c-0.3-0.5-0.2-1.1,0.3-1.4C11.7,1.9,12.3,2,12.6,2.5z M11.4,2.5 c-1.2,1.8-1.9,3.9-1.9,6.1c0,4.7,2.9,8.7,7,10.3c0.6,0.2,1.2-0.1,1.4-0.7c0.2-0.6-0.1-1.2-0.7-1.4c-3.3-1.3-5.7-4.6-5.7-8.3 c0-1.8,0.5-3.5,1.5-4.9c0.3-0.5,0.2-1.1-0.3-1.4C12.3,1.9,11.7,2,11.4,2.5z"/>
+                </svg>
+                <svg class="butterfly absolute top-20 right-20 w-6 h-6 text-white opacity-80" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.6,2.5c1.2,1.8,1.9,3.9,1.9,6.1c0,4.7-2.9,8.7-7,10.3c-0.6,0.2-1.2-0.1-1.4-0.7c-0.2-0.6,0.1-1.2,0.7-1.4 c3.3-1.3,5.7-4.6,5.7-8.3c0-1.8-0.5-3.5-1.5-4.9c-0.3-0.5-0.2-1.1,0.3-1.4C11.7,1.9,12.3,2,12.6,2.5z M11.4,2.5 c-1.2,1.8-1.9,3.9-1.9,6.1c0,4.7,2.9,8.7,7,10.3c0.6,0.2,1.2-0.1,1.4-0.7c0.2-0.6-0.1-1.2-0.7-1.4c-3.3-1.3-5.7-4.6-5.7-8.3 c0-1.8,0.5-3.5,1.5-4.9c0.3-0.5,0.2-1.1-0.3-1.4C12.3,1.9,11.7,2,11.4,2.5z"/>
+                </svg>
+                <svg class="butterfly absolute bottom-5 left-1/4 w-5 h-5 text-white opacity-60" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.6,2.5c1.2,1.8,1.9,3.9,1.9,6.1c0,4.7-2.9,8.7-7,10.3c-0.6,0.2-1.2-0.1-1.4-0.7c-0.2-0.6,0.1-1.2,0.7-1.4 c3.3-1.3,5.7-4.6,5.7-8.3c0-1.8-0.5-3.5-1.5-4.9c-0.3-0.5-0.2-1.1,0.3-1.4C11.7,1.9,12.3,2,12.6,2.5z M11.4,2.5 c-1.2,1.8-1.9,3.9-1.9,6.1c0,4.7,2.9,8.7,7,10.3c0.6,0.2,1.2-0.1,1.4-0.7c0.2-0.6-0.1-1.2-0.7-1.4c-3.3-1.3-5.7-4.6-5.7-8.3 c0-1.8,0.5-3.5,1.5-4.9c0.3-0.5,0.2-1.1-0.3-1.4C12.3,1.9,11.7,2,11.4,2.5z"/>
+                </svg>
+            </div>
+            <div class="bg-gradient-to-r from-pink-400 to-pink-500 rounded-xl shadow-lg p-8 text-center relative overflow-hidden">
+                <!-- Logo Placeholder - Replace with your actual logo -->
+                <div class="logo-placeholder">
+                    <!-- Your logo would go here -->
+                </div>
+                <h1 class="title text-4xl md:text-5xl font-bold text-white mb-2">Danielly Barros Beauty</h1>
+                <p class="text-pink-100 text-lg">Realce sua beleza com nossos produtos</p>
+                <div class="mt-3 bg-white bg-opacity-20 inline-block px-4 py-2 rounded-full text-white font-semibold">
+                    Todos os produtos R$ 10,00
+                </div>
+            </div>
+        </header>
+
+        <!-- Catalog Section -->
+        <section class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="title text-2xl font-bold text-pink-600">Catálogo de Produtos</h2>
+                <button id="cart-button" class="relative bg-white text-pink-600 px-4 py-2 rounded-full shadow-md hover:bg-pink-50 transition-all">
+                    <span class="cart-item-count hidden">0</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="mb-6 flex flex-wrap gap-2">
+                <button class="category-tab tab-active px-4 py-2 rounded-t-lg font-medium transition-all" data-category="todos">Todos</button>
+                <button class="category-tab px-4 py-2 rounded-t-lg font-medium transition-all" data-category="pele">Pele</button>
+                <button class="category-tab px-4 py-2 rounded-t-lg font-medium transition-all" data-category="olhos">Olhos</button>
+                <button class="category-tab px-4 py-2 rounded-t-lg font-medium transition-all" data-category="boca">Boca</button>
+                <button class="category-tab px-4 py-2 rounded-t-lg font-medium transition-all" data-category="acessorios">Acessórios</button>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Products will be loaded here -->
+            </div>
+        </section>
+
+        <!-- About Section (moved to bottom) -->
+        <section class="mb-12 bg-white rounded-xl shadow-md p-6 relative overflow-hidden">
+            <div class="absolute top-0 right-0">
+                <svg class="butterfly w-16 h-16 text-pink-100 opacity-70" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.6,2.5c1.2,1.8,1.9,3.9,1.9,6.1c0,4.7-2.9,8.7-7,10.3c-0.6,0.2-1.2-0.1-1.4-0.7c-0.2-0.6,0.1-1.2,0.7-1.4 c3.3-1.3,5.7-4.6,5.7-8.3c0-1.8-0.5-3.5-1.5-4.9c-0.3-0.5-0.2-1.1,0.3-1.4C11.7,1.9,12.3,2,12.6,2.5z M11.4,2.5 c-1.2,1.8-1.9,3.9-1.9,6.1c0,4.7,2.9,8.7,7,10.3c0.6,0.2,1.2-0.1,1.4-0.7c0.2-0.6-0.1-1.2-0.7-1.4c-3.3-1.3-5.7-4.6-5.7-8.3 c0-1.8,0.5-3.5,1.5-4.9c0.3-0.5,0.2-1.1-0.3-1.4C12.3,1.9,11.7,2,11.4,2.5z"/>
+                </svg>
+            </div>
+            <h2 class="title text-2xl font-bold text-pink-600 mb-4">Sobre Nossa Loja</h2>
+            <p class="text-gray-700 leading-relaxed">
+                A Danielly Barros Beauty nasceu da paixão por realçar a beleza natural de cada pessoa. 
+                Oferecemos produtos que valorizam sua beleza única, todos por apenas R$ 10,00! 
+                Nossa missão é proporcionar uma experiência de compra acessível e personalizada, 
+                com produtos selecionados que transformam seu visual e elevam sua autoestima.
+            </p>
+        </section>
+
+        <!-- Cart Modal -->
+        <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="title text-xl font-bold text-pink-600">Seu Carrinho</h3>
+                    <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="cart-items" class="mb-4">
+                    <!-- Cart items will be loaded here -->
+                    <p id="empty-cart-message" class="text-gray-500 text-center py-4">Seu carrinho está vazio</p>
+                </div>
+                <div class="border-t border-gray-200 pt-4">
+                    <div class="flex justify-between font-semibold mb-4">
+                        <span>Total:</span>
+                        <span id="cart-total">R$ 0,00</span>
+                    </div>
+                    
+                    <!-- Shipping Notice -->
+                    <div class="shipping-notice mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Valor do frete será consultado no momento da finalização do pedido.</span>
+                    </div>
+                    
+                    <!-- Customer Information Form -->
+                    <div id="customer-info-form" class="mb-4">
+                        <h4 class="font-semibold text-gray-700 mb-2">Informações para entrega</h4>
+                        <div class="mb-3">
+                            <label class="block text-sm text-gray-600 mb-1">Nome completo</label>
+                            <input type="text" id="customer-name" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Seu nome completo">
+                        </div>
+                        <div class="mb-3">
+                            <label class="block text-sm text-gray-600 mb-1">Endereço completo</label>
+                            <textarea id="customer-address" class="w-full px-3 py-2 border border-gray-300 rounded-md" rows="2" placeholder="Rua, número, bairro, complemento, cidade"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block text-sm text-gray-600 mb-1">Forma de pagamento</label>
+                            <select id="payment-method" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="">Selecione uma opção</option>
+                                <option value="pix">PIX</option>
+                                <option value="dinheiro">Dinheiro</option>
+                                <option value="credito">Cartão de Crédito</option>
+                                <option value="debito">Cartão de Débito</option>
+                            </select>
+                        </div>
+                        <div id="card-brand-container" class="mb-3 hidden">
+                            <label class="block text-sm text-gray-600 mb-1">Bandeira do cartão</label>
+                            <select id="card-brand" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="">Selecione uma bandeira</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="elo">Elo</option>
+                                <option value="amex">American Express</option>
+                                <option value="hipercard">Hipercard</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="checkout-button" class="w-full bg-pink-500 text-white py-3 rounded-lg font-medium hover:bg-pink-600 transition-colors">
+                        Finalizar Compra pelo WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-pink-500 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center mb-3">
+                <div class="logo-placeholder" style="width: 40px; height: 40px;">
+                    <!-- Small logo in footer -->
+                </div>
+            </div>
+            <p class="mb-4">© 2025 Danielly Barros Beauty. Todos os direitos reservados.</p>
+            
+            <!-- Social Media Links -->
+            <div class="flex flex-col items-center justify-center space-y-2 mb-2">
+                <a href="https://wa.me/5581983586860" target="_blank" class="contact-item social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="contact-icon" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                    </svg>
+                    <span>WhatsApp: (81) 98358-6860</span>
+                </a>
+                <a href="https://instagram.com/daniellybarrosbeauty" target="_blank" class="contact-item social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="contact-icon" viewBox="0 0 16 16">
+                        <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+                    </svg>
+                    <span>Instagram: @daniellybarrosbeauty</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product Database with stock information
+        const products = {
+            pele: [
+                 { id: 'base1', name: 'Base Líquida da Vivai', price: 10.00, description: 'Base de alta cobertura com acabamento natural', image: 'imagens/base_liquida_da_vivai.JPG', stock: 1, colors: [{name: '04', code: '#E8BE9D'}] },
+                { id: 'po1', name: 'Pó Banana da Lady Beauty', price: 10.00, description: 'Acabamento aveludado e controle de brilho', image: 'imagens/pó_banana_da_lady_beauty.jpg', stock: 2 },
+                { id: 'po2', name: 'Pó Translúcido Gabriela Bella', price: 10.00, description: 'Acabamento natural e controle de oleosidade', image: 'imagens/pó_translúcido_gabriela_bella.jpg', stock: 2 },
+                { id: 'ilum1', name: 'Iluminador da Mavah', price: 10.00, description: 'Brilho intenso para um visual radiante', image: 'imagens/iluminador_da_mavah.jpg', stock: 2 },
+                { id: 'lenco1', name: 'Lenço Umedecido da Fenzza', price: 10.00, description: 'Ideal para limpeza facial antes da maquiagem', image: 'imagens/lenço_umedecido_da_fezza.jpg', stock: 2 },
+                { id: 'agua1', name: 'Água Micelar Ácido Hialurônico da Face Beautiful', price: 10.00, description: 'Limpa e hidrata a pele', image: 'imagens/água_micelar_acido_hialuronico.jpg', stock: 1 },
+                { id: 'serum1', name: 'Sérum Rosa Mosqueta da Max Love', price: 10.00, description: 'Hidratação profunda e anti-idade', image: 'imagens/serum_rosa_mosqueta.jpg', stock: 1 },
+                { id: 'sabonete1', name: 'Sabonete Líquido Pré Make da Isis', price: 10.00, description: 'Prepara a pele para maquiagem', image: 'imagens/sabonete_liquido.jpg', stock: 2 },
+                { id: 'bruma1', name: 'Bruma Rosa Mosqueta da Lady Beauty', price: 10.00, description: 'Hidratação e fixação para sua maquiagem', image: 'imagens/bruma_rosa_mosqueta.jpg', stock: 2 }
+            ],
+            olhos: [
+                { id: 'sombra1', name: 'Quarteto de Sombra Nude da Ludurana', price: 10.00, description: 'Cores neutras para o dia a dia', image: 'imagens/quarteto_de_sombra_nude.jpg', stock: 1 },
+                { id: 'sombra2', name: 'Quarteto de Sombra Matte Rosa da Ludurana', price: 10.00, description: 'Cores rosadas para looks românticos', image: 'imagens/quarteto_sombra_matte_rosa.jpg', stock: 1 },
+                { id: 'delineador1', name: 'Delineador Kajal da Vivai Preto', price: 10.00, description: 'Traço preciso e duradouro', image: 'imagens/delineador_kajal.jpg', stock: 2 },
+                { id: 'lapis1', name: 'Lápis de Olho Preto Retrátil da Pink 21', price: 10.00, description: 'Alta fixação e à prova d\'água', image: 'imagens/lapis_de_olho_preto.jpg', stock: 12 },
+                { id: 'mascara1', name: 'Máscara de Cílios Preta da Hello Mini', price: 10.00, description: 'Volume e alongamento para os cílios', image: 'imagens/mascara_de_cilios_preto.jpg', stock: 2 },
+                { id: 'lapis2', name: 'Lápis de Sobrancelha Marrom da Uni Makeup', price: 10.00, description: 'Define e preenche com precisão', image: 'imagens/lapis_de_sombrancelha.jpg', stock: 3 },
+                { id: 'mascara2', name: 'Máscara Incolor de Sobrancelha/Cílios da Lua & Neve', price: 10.00, description: 'Fixa e modela sobrancelhas e cílios', image: 'imagens/mascara_incolor.jpg', stock: 3 }
+            ],
+            boca: [
+                { id: 'batom1', name: 'Batom Matte All Day da Vivai', price: 10.00, description: 'Longa duração e alta pigmentação', image: 'imagens/batom_matte all_day.jpg', stock: 3, colors: [
+                    {name: '01', code: '#B5313A'},
+                    {name: '03', code: '#D35163'},
+                    {name: '04', code: '#A82732'}
+                ]},
+                { id: 'batom2', name: 'Batom Ovo Líquido Matte da Vivai', price: 10.00, description: 'Acabamento matte e longa duração', image: 'imagens/base_liquida_da_vivai.JPG', stock: 3, colors: [
+                    {name: '03', code: '#C64863'},
+                    {name: '07', code: '#A73B50'},
+                    {name: '11', code: '#D25A6E'}
+                ]},
+                { id: 'lapis3', name: 'Lápis de Contorno Labial da Jasmine', price: 10.00, description: 'Contorno perfeito para os lábios', image: 'imagens/lapis_de_contorno_labial.jpg', stock: 3, colors: [
+                    {name: '02', code: '#9E3C4A'},
+                    {name: '04', code: '#B54A5A'},
+                    {name: '07', code: '#A33040'}
+                ]},
+                { id: 'gloss1', name: 'Gloss da Toque Special', price: 10.00, description: 'Brilho intenso com partículas de brilho', image: 'imagens/gloss_da_toque_especial.jpg', stock: 2 },
+                { id: 'liptint1', name: 'Lip Tint Metalizado da Max Love', price: 10.00, description: 'Cor natural que dura o dia todo', image: 'imagens/lip_tint_metalizado.jpg', stock: 2 }
+            ],
+            acessorios: [
+                { id: 'cilios1', name: 'Kit Cílios Postiço', price: 10.00, description: 'Para um olhar mais marcante', image: 'imagens/kit_cilios_postiços.jpg', stock: 9 },
+                { id: 'cola1', name: 'Cola de Cílio Postiço da Eye', price: 10.00, description: 'Fixação segura e duradoura', image: 'imagens/cola_de_cilios_postiço.jpg', stock: 3 },
+                { id: 'esponja1', name: 'Esponja de Base com Suporte', price: 10.00, description: 'Aplicação perfeita de base', image: 'imagens/esponja_de_base_com_suporte.jpg', stock: 4 },
+                { id: 'esponja2', name: 'Kit 3 Esponja de Pó', price: 10.00, description: 'Para aplicação de pó facial', image: 'imagens/kit_3_esponja_de_pó.jpg', stock: 3 },
+                { id: 'faixa1', name: 'Faixa de Skincare', price: 10.00, description: 'Para prender o cabelo durante a rotina de skincare', image: 'imagens/faixa_de_skincare.jpg', stock: 2, colors: [
+                    {name: 'Rosa', code: '#FF9EC0'},
+                    {name: 'Lilás', code: '#C8A2C8'}
+                ]},
+                { id: 'navalha1', name: 'Kit 3 Navalhas', price: 10.00, description: 'Para dermaplaning facial', image: 'imagens/kit_3_navalhas.jpg', stock: 2 },
+                { id: 'pincel1', name: 'Kit Pincel Sereia', price: 10.00, description: 'Conjunto com pincéis coloridos', image: 'imagens/kit_pincel_sereia.jpg', stock: 1 },
+                { id: 'pinca1', name: 'Kit 3 Pinças de Sobrancelha', price: 10.00, description: 'Para design perfeito de sobrancelhas', image: 'imagens/kit_3_pincas_de_sombrancelha.jpg', stock: 1 },
+                { id: 'escova1', name: 'Escova Raquete de Cabelo', price: 10.00, description: 'Desembaraça sem danificar os fios', image: 'imagens/escova_raquete_de_cabelo.jpg', stock: 1 },
+                { id: 'touca1', name: 'Touca de Cetim', price: 10.00, description: 'Protege o cabelo durante o sono', image: 'imagens/touca_de_cetim.jpg', stock: 1 },
+                { id: 'kit1', name: 'Kit Pincel de Silicone e Máscara Facial', price: 10.00, description: 'Para aplicação de máscaras faciais', image: 'imagens/kit_pincel_de_silicone _e_mascara_facial.jpg', stock: 2 }
+            ]
+        };
+
+        // Create a "todos" category that combines all products
+        products.todos = [
+            ...products.pele,
+            ...products.olhos,
+            ...products.boca,
+            ...products.acessorios
+        ];
+
+        // Create a copy of the products to track stock changes
+        const productStock = {};
+        
+        // Initialize product stock
+        for (const category in products) {
+            products[category].forEach(product => {
+                productStock[product.id] = product.stock;
+            });
+        }
+
+        // Shopping Cart
+        let cart = [];
+        
+        // DOM Elements
+        const productsContainer = document.getElementById('products-container');
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const cartButton = document.getElementById('cart-button');
+        const cartModal = document.getElementById('cart-modal');
+        const closeCartButton = document.getElementById('close-cart');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const checkoutButton = document.getElementById('checkout-button');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartItemCount = document.querySelector('.cart-item-count');
+        const paymentMethod = document.getElementById('payment-method');
+        const cardBrandContainer = document.getElementById('card-brand-container');
+
+        // Show/hide card brand field based on payment method
+        paymentMethod.addEventListener('change', function() {
+            if (this.value === 'credito' || this.value === 'debito') {
+                cardBrandContainer.classList.remove('hidden');
+            } else {
+                cardBrandContainer.classList.add('hidden');
+            }
+        });
+
+        // Get current stock for a product
+        function getCurrentStock(productId) {
+            return productStock[productId];
+        }
+
+        // Update stock for a product
+        function updateStock(productId, quantity) {
+            productStock[productId] -= quantity;
+            if (productStock[productId] < 0) productStock[productId] = 0;
+            return productStock[productId];
+        
+        }
+
+        // Find product by ID across all categories
+        function findProductById(productId) {
+            for (const category in products) {
+                const product = products[category].find(p => p.id === productId);
+                if (product) return product;
+            }
+            return null;
+        }
+
+        // Load products for a category
+        function loadProducts(category) {
+            productsContainer.innerHTML = '';
+            
+            products[category].forEach(product => {
+                const currentStock = getCurrentStock(product.id);
+                const isOutOfStock = currentStock <= 0;
+                const isLowStock = currentStock > 0 && currentStock < 5;
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 relative';
+                
+                // Stock badge
+                let stockBadge = '';
+                if (isOutOfStock) {
+                    stockBadge = `<span class="stock-badge out-of-stock">Esgotado</span>`;
+                } else if (isLowStock) {
+                    stockBadge = `<span class="stock-badge low-stock">Últimas unidades!</span>`;
+                }
+                
+                // Color options
+                let colorOptionsHtml = '';
+                if (product.colors && product.colors.length > 0) {
+                    colorOptionsHtml = `
+                        <div class="mt-3 mb-3">
+                            <p class="text-xs font-semibold text-gray-700 mb-2">Cores disponíveis:</p>
+                            <div class="color-swatch-container" data-product-id="${product.id}">
+                                ${product.colors.map((color, index) => `
+                                    <div class="color-swatch ${index === 0 ? 'selected' : ''}" data-color-name="${color.name}">
+                                        <div class="color-circle" style="background-color: ${color.code};"></div>
+                                        <div class="color-name">Cor ${color.name}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Button state based on stock
+                let buttonHtml = '';
+                if (isOutOfStock) {
+                    buttonHtml = `<button class="bg-gray-400 text-white px-3 py-1 rounded-full text-sm cursor-not-allowed" disabled>Esgotado</button>`;
+                } else {
+                    buttonHtml = `
+                        <button class="add-to-cart-btn bg-pink-500 text-white px-3 py-1 rounded-full text-sm hover:bg-pink-600 transition-colors" 
+                            data-id="${product.id}" 
+                            data-name="${product.name}" 
+                            data-price="${product.price}"
+                            data-image="${product.image}">
+                            Adicionar
+                        </button>
+                    `;
+                }
+                
+                productCard.innerHTML = `
+                     ${stockBadge}
+                    <div class="p-4">
+                        <div class="text-center">
+                            <img src="${product.image}" alt="${product.name}" class="w-32 h-32 mx-auto mb-2" /> <!-- Imagem do produto -->
+                        </div>
+                        <h3 class="font-semibold text-lg text-pink-700 mb-1">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-2">${product.description}</p>
+                        ${colorOptionsHtml}
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-pink-600">R$ ${product.price.toFixed(2)}</span>
+                            ${buttonHtml}
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2 text-right">
+                            ${!isOutOfStock ? `Estoque: ${currentStock}` : ''}
+                        </div>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+
+            // Add event listeners to the "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+
+            // Add event listeners to color swatches
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.addEventListener('click', function() {
+                    // Get all color swatches for this product
+                    const productId = this.closest('.color-swatch-container').dataset.productId;
+                    const colorSwatches = document.querySelectorAll(`.color-swatch-container[data-product-id="${productId}"] .color-swatch`);
+                    
+                    // Remove selected class from all swatches
+                    colorSwatches.forEach(sw => sw.classList.remove('selected'));
+                    
+                    // Add selected class to clicked swatch
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        // Switch between categories
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                categoryTabs.forEach(t => t.classList.remove('tab-active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('tab-active');
+                
+                // Load products for the selected category
+                loadProducts(tab.dataset.category);
+            });
+        });
+
+        // Add product to cart
+        function addToCart(event) {
+            const button = event.currentTarget;
+            const productId = button.dataset.id;
+            const productName = button.dataset.name;
+            const productPrice = parseFloat(button.dataset.price);
+            const productImage = button.dataset.image;
+            
+            // Check if product is in stock
+            const currentStock = getCurrentStock(productId);
+            if (currentStock <= 0) {
+                alert('Este produto está esgotado.');
+                return;
+            }
+            
+            // Get selected color if available
+            let selectedColor = null;
+            const colorSwatchContainer = document.querySelector(`.color-swatch-container[data-product-id="${productId}"]`);
+            if (colorSwatchContainer) {
+                const selectedColorSwatch = colorSwatchContainer.querySelector('.color-swatch.selected');
+                if (selectedColorSwatch) {
+                    selectedColor = selectedColorSwatch.dataset.colorName;
+                }
+            }
+            
+            // Create cart item ID (product ID + color if available)
+            const cartItemId = selectedColor ? `${productId}-${selectedColor}` : productId;
+            
+            // Update stock
+            const newStock = updateStock(productId, 1);
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.cartItemId === cartItemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    cartItemId: cartItemId,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    color: selectedColor,
+                    quantity: 1
+                });
+            }
+            
+               updateCartUI();
+            
+            // Show visual feedback
+            button.textContent = "Adicionado!";
+            button.classList.add('bg-green-500');
+            button.classList.remove('bg-pink-500', 'hover:bg-pink-600');
+            
+            // Update the product card to reflect new stock
+            const productCard = button.closest('.product-card');
+            const stockDisplay = productCard.querySelector('.text-xs.text-gray-500');
+            stockDisplay.textContent = `Estoque: ${newStock}`;
+            
+            // If stock is now 0, disable the button
+            if (newStock <= 0) {
+                button.textContent = "Esgotado";
+                button.disabled = true;
+                button.classList.remove('bg-green-500');
+                button.classList.add('bg-gray-400', 'cursor-not-allowed');
+                
+                // Add out of stock badge
+                const stockBadge = document.createElement('span');
+                stockBadge.className = 'stock-badge out-of-stock';
+                stockBadge.textContent = 'Esgotado';
+                productCard.appendChild(stockBadge);
+            } 
+            // If stock is low, add low stock badge if not already there
+            else if (newStock < 5 && !productCard.querySelector('.stock-badge.low-stock')) {
+                const stockBadge = document.createElement('span');
+                stockBadge.className = 'stock-badge low-stock';
+                stockBadge.textContent = 'Últimas unidades!';
+                productCard.appendChild(stockBadge);
+            }
+            
+            setTimeout(() => {
+                if (newStock > 0) {
+                    button.textContent = "Adicionar";
+                    button.classList.remove('bg-green-500');
+                    button.classList.add('bg-pink-500', 'hover:bg-pink-600');
+                }
+            }, 1000);
+        }
+
+        // Update cart UI
+      function updateCartUI() {
+    // Update cart items
+    cartItemsContainer.innerHTML = '';
+    
+    if (cart.length === 0) {
+        emptyCartMessage.classList.remove('hidden');
+    } else {
+        emptyCartMessage.classList.add('hidden');
+        
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'flex justify-between items-center mb-3 pb-3 border-b border-gray-100';
+            
+            // Product name with color if available
+            const displayName = item.color ? `${item.name} - Cor ${item.color}` : item.name;
+            
+            cartItem.innerHTML = `
+                <div class="flex items-center">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 mr-2" /> <!-- Exibir a imagem do produto -->
+                    <div>
+                        <h4 class="font-medium">${displayName}</h4>
+                        <p class="text-gray-500 text-sm">R$ ${item.price.toFixed(2)}</p>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="quantity-control mr-3">
+                        <button class="quantity-btn decrease-quantity" data-id="${item.cartItemId}">-</button>
+                        <input type="text" class="quantity-input" value="${item.quantity}" readonly>
+                        <button class="quantity-btn increase-quantity" data-id="${item.cartItemId}">+</button>
+                    </div>
+                    <span class="font-medium mr-2">R$ ${(item.price * item.quantity).toFixed(2)}</span>
+                    <button class="remove-item text-gray-400 hover:text-red-500" data-id="${item.cartItemId}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+            cartItemsContainer.appendChild(cartItem);
+        });
+        
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', removeFromCart);
+        });
+        
+        // Add event listeners to quantity buttons
+        document.querySelectorAll('.decrease-quantity').forEach(button => {
+            button.addEventListener('click', decreaseQuantity);
+        });
+        
+        document.querySelectorAll('.increase-quantity').forEach(button => {
+            button.addEventListener('click', increaseQuantity);
+        });
+    }
+    
+    // Update total
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    cartTotal.textContent = `R$ ${total.toFixed(2)}`;
+    
+    // Update cart count
+    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (itemCount > 0) {
+        cartItemCount.textContent = itemCount;
+        cartItemCount.classList.remove('hidden');
+    } else {
+        cartItemCount.classList.add('hidden');
+    }
+}
+
+
+        // Decrease item quantity
+        function decreaseQuantity(event) {
+            const cartItemId = event.currentTarget.dataset.id;
+            const item = cart.find(item => item.cartItemId === cartItemId);
+            
+            if (item && item.quantity > 1) {
+                item.quantity -= 1;
+                
+                // Return one to stock
+                productStock[item.id] += 1;
+                
+                updateCartUI();
+                
+                // If the current category contains this product, refresh the display
+                const activeTab = document.querySelector('.category-tab.tab-active');
+                if (activeTab) {
+                    loadProducts(activeTab.dataset.category);
+                }
+            }
+        }
+
+        // Increase item quantity
+        function increaseQuantity(event) {
+            const cartItemId = event.currentTarget.dataset.id;
+            const item = cart.find(item => item.cartItemId === cartItemId);
+            
+            if (item) {
+                // Check if there's stock available
+                if (productStock[item.id] > 0) {
+                    item.quantity += 1;
+                    
+                    // Decrease stock
+                    productStock[item.id] -= 1;
+                    
+                    updateCartUI();
+                    
+                    // If the current category contains this product, refresh the display
+                    const activeTab = document.querySelector('.category-tab.tab-active');
+                    if (activeTab) {
+                        loadProducts(activeTab.dataset.category);
+                    }
+                } else {
+                    alert('Não há mais estoque disponível para este produto.');
+                }
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(event) {
+            const cartItemId = event.currentTarget.dataset.id;
+            const item = cart.find(item => item.cartItemId === cartItemId);
+            
+            if (item) {
+                // Return item to stock
+                productStock[item.id] += item.quantity;
+                
+                // Remove from cart
+                cart = cart.filter(i => i.cartItemId !== cartItemId);
+                updateCartUI();
+                
+                // If the current category contains this product, refresh the display
+                const activeTab = document.querySelector('.category-tab.tab-active');
+                if (activeTab) {
+                    loadProducts(activeTab.dataset.category);
+                }
+            }
+        }
+
+        // Open cart modal
+        cartButton.addEventListener('click', () => {
+            cartModal.classList.remove('hidden');
+        });
+
+        // Close cart modal
+        closeCartButton.addEventListener('click', () => {
+            cartModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside
+        cartModal.addEventListener('click', (event) => {
+            if (event.target === cartModal) {
+                cartModal.classList.add('hidden');
+            }
+        });
+
+        // Checkout - Send to WhatsApp
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Adicione produtos ao carrinho antes de finalizar a compra.');
+                return;
+            }
+            
+            // Validate customer information
+            const customerName = document.getElementById('customer-name').value.trim();
+            const customerAddress = document.getElementById('customer-address').value.trim();
+            const paymentMethod = document.getElementById('payment-method').value;
+            
+            if (!customerName) {
+                alert('Por favor, informe seu nome completo.');
+                return;
+            }
+            
+            if (!customerAddress) {
+                alert('Por favor, informe seu endereço completo para entrega.');
+                return;
+            }
+            
+            if (!paymentMethod) {
+                alert('Por favor, selecione uma forma de pagamento.');
+                return;
+            }
+            
+            // Get card brand if applicable
+            let cardBrand = '';
+            if (paymentMethod === 'credito' || paymentMethod === 'debito') {
+                cardBrand = document.getElementById('card-brand').value;
+                if (!cardBrand) {
+                    alert('Por favor, selecione a bandeira do cartão.');
+                    return;
+                }
+            }
+            
+            // Create WhatsApp message
+            let message = `Olá! Gostaria de fazer um pedido na Danielly Barros Beauty:\n\n`;
+            
+            // Add customer info
+            message += `*Informações para entrega:*\n`;
+            message += `Nome: ${customerName}\n`;
+            message += `Endereço: ${customerAddress}\n\n`;
+            
+            // Add payment info
+            message += `*Forma de pagamento:*\n`;
+            switch(paymentMethod) {
+                case 'pix':
+                    message += `PIX\n\n`;
+                    break;
+                case 'dinheiro':
+                    message += `Dinheiro\n\n`;
+                    break;
+                case 'credito':
+                    message += `Cartão de Crédito - ${cardBrand}\n\n`;
+                    break;
+                case 'debito':
+                    message += `Cartão de Débito - ${cardBrand}\n\n`;
+                    break;
+            }
+            
+            // Add products
+            message += `*Produtos:*\n`;
+            cart.forEach(item => {
+                const displayName = item.color ? `${item.name} - Cor ${item.color}` : item.name;
+                message += `• ${displayName} - ${item.quantity}x - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
+            });
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            message += `\n*Total: R$ ${total.toFixed(2)}*`;
+            message += `\n\n*Obs: Valor do frete será consultado.*`;
+            
+            // Your WhatsApp number
+            const phoneNumber = "5581983586860";
+            
+            // Create WhatsApp URL
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Initialize with the first category
+        loadProducts('todos');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95178ff9b07dd06c',t:'MTc1MDIxNTg5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
